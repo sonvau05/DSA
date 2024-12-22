@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.demo9.HelloController">
+    <top>
+        <Label text="Student Management System"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 10;"
+               BorderPane.alignment="CENTER"/>
+    </top>
+
+    <left>
+        <GridPane hgap="10" vgap="10"
+                  BorderPane.alignment="CENTER"
+                  style="-fx-padding: 20; -fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px;">
+            <children>
+                <Label text="Student ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                       style="-fx-font-size: 14px;"/>
+                <TextField fx:id="idField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                       style="-fx-font-size: 14px;"/>
+                <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Math Mark:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                       style="-fx-font-size: 14px;"/>
+                <TextField fx:id="mathMarkField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Literature Mark:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                       style="-fx-font-size: 14px;"/>
+                <TextField fx:id="literatureMarkField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="English Mark:" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                       style="-fx-font-size: 14px;"/>
+                <TextField fx:id="englishMarkField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                <Button text="Add" onAction="#addStudent" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2"
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10;"/>
+            </children>
+        </GridPane>
+    </left>
+
+    <center>
+        <TableView fx:id="studentTableView" BorderPane.alignment="CENTER"
+                   style="-fx-padding: 10; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-background-color: white;">
+            <columns>
+                <TableColumn text="Student ID" fx:id="idColumn" prefWidth="100"/>
+                <TableColumn text="Name" fx:id="nameColumn" prefWidth="150"/>
+                <TableColumn text="Math Mark" fx:id="mathMarkColumn" prefWidth="100"/>
+                <TableColumn text="Literature Mark" fx:id="literatureMarkColumn" prefWidth="100"/>
+                <TableColumn text="English Mark" fx:id="englishMarkColumn" prefWidth="100"/>
+                <TableColumn text="Average Mark" fx:id="averageMarkColumn" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
