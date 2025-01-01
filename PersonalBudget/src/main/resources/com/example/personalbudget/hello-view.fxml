@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane xmlns:fx="http://javafx.com/javafx" fx:controller="com.example.personalbudget.HelloController">
+    <tabs>
+        <Tab text="Thêm Chi Tiêu" closable="false">
+            <VBox alignment="TOP_CENTER" spacing="15" style="-fx-padding: 20;">
+                <TitledPane text="Thêm Mục Chi Tiêu" expanded="true">
+                    <VBox spacing="10">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Tháng:" style="-fx-font-weight: bold;" />
+                            <ComboBox fx:id="monthComboBox" promptText="Chọn tháng" />
+                        </HBox>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Danh mục:" style="-fx-font-weight: bold;" />
+                            <ComboBox fx:id="categoryComboBox" promptText="Chọn danh mục" />
+                        </HBox>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Số tiền (VND):" style="-fx-font-weight: bold;" />
+                            <TextField fx:id="amountTextField" promptText="Nhập số tiền" />
+                        </HBox>
+                        <Button text="Thêm Chi Tiêu" onAction="#addExpense" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                    </VBox>
+                </TitledPane>
+                <Label fx:id="totalExpenseText" text="Tổng chi tiêu hiện tại: 0 VND" style="-fx-font-size: 14px;" />
+            </VBox>
+        </Tab>
+
+        <Tab text="Biểu Đồ Chi Tiêu" closable="false">
+            <VBox alignment="TOP_CENTER" spacing="15" style="-fx-padding: 20;">
+                <Label text="Biểu đồ chi tiêu theo tháng" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                <StackedBarChart fx:id="expenseBarChart" prefWidth="800" prefHeight="300">
+                    <xAxis>
+                        <CategoryAxis fx:id="monthAxis" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="expenseYAxis" />
+                    </yAxis>
+                </StackedBarChart>
+                <PieChart fx:id="expensePieChart" prefWidth="800" prefHeight="300" />
+            </VBox>
+        </Tab>
+
+        <Tab text="Chi Tiêu Tổng Quan" closable="false">
+            <VBox spacing="15" style="-fx-padding: 20;">
+                <TableView fx:id="monthlyExpenseTable">
+                    <columns>
+                        <TableColumn text="Tháng" fx:id="monthlyMonthColumn" />
+                        <TableColumn text="Danh Mục" fx:id="monthlyCategoryColumn" />
+                        <TableColumn text="Tiền Chi Tiêu" fx:id="monthlyTotalExpenseColumn" />
+                    </columns>
+                </TableView>
+                <TableView fx:id="yearlyExpenseTable">
+                    <columns>
+                        <TableColumn text="Tháng" fx:id="yearlyMonthColumn" />
+                        <TableColumn text="Chi Tiêu Cao Nhất" fx:id="yearlyHighestExpenseColumn" />
+                        <TableColumn text="Tổng Chi Tiêu" fx:id="yearlyTotalExpenseColumn" />
+                        <TableColumn text="Phân Tích" fx:id="monthlyAnalysisColumn" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <Tab text="Lịch Sử Chi Tiêu" closable="false">
+            <VBox alignment="TOP_CENTER" spacing="15" style="-fx-padding: 20;">
+                <Label text="Lịch sử chi tiêu theo tháng" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                <TableView fx:id="expenseHistoryTable">
+                    <columns>
+                        <TableColumn text="Tháng" fx:id="monthColumn" />
+                        <TableColumn text="Danh Mục" fx:id="categoryColumn" />
+                        <TableColumn text="Số Tiền" fx:id="amountColumn" />
+                    </columns>
+                </TableView>
+                <Button text="Xóa lịch sử" onAction="#clearHistory" style="-fx-background-color: #F44336; -fx-text-fill: white;" />
+            </VBox>
+        </Tab>
+
+        <Tab text="Thêm Thu Nhập" closable="false">
+            <VBox alignment="TOP_CENTER" spacing="15" style="-fx-padding: 20;">
+                <TitledPane text="Thêm Mục Thu Nhập" expanded="true">
+                    <VBox spacing="10">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Nguồn Thu Nhập:" style="-fx-font-weight: bold;" />
+                            <ComboBox fx:id="incomeSourceComboBox" promptText="Chọn nguồn thu nhập" />
+                        </HBox>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Số tiền (VND):" style="-fx-font-weight: bold;" />
+                            <TextField fx:id="incomeAmountTextField" promptText="Nhập số tiền thu nhập" />
+                        </HBox>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Ghi chú:" style="-fx-font-weight: bold;" />
+                            <TextField fx:id="incomeNoteTextField" promptText="Nhập ghi chú" />
+                        </HBox>
+                        <Button text="Thêm Thu Nhập" onAction="#addIncome" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                    </VBox>
+                </TitledPane>
+                <Label fx:id="totalIncomeText" text="Tổng thu nhập hiện tại: 0 VND" style="-fx-font-size: 14px;" />
+            </VBox>
+        </Tab>
+
+        <Tab text="Lịch Sử Thu Nhập" closable="false">
+            <VBox alignment="TOP_CENTER" spacing="15" style="-fx-padding: 20;">
+                <Label text="Lịch sử thu nhập theo tháng" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                <TableView fx:id="incomeHistoryTable">
+                    <columns>
+                        <TableColumn fx:id="incomeSourceColumn" text="Nguồn" />
+                        <TableColumn fx:id="incomeAmountColumn" text="Số Tiền" />
+                        <TableColumn fx:id="incomeNoteColumn" text="Ghi Chú" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+    </tabs>
+</TabPane>
