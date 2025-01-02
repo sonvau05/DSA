@@ -13,7 +13,7 @@ public class HelloApplication extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            stage.setTitle("Quản Lý Chi Tiêu Cá Nhân");
+            stage.setTitle("Personal Budget Management.");
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

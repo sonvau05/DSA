@@ -124,15 +124,15 @@ public class HelloController {
     @FXML
     public void initialize() {
         monthComboBox.setItems(FXCollections.observableArrayList(
-                "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
-                "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
         ));
 
         categoryComboBox.setItems(FXCollections.observableArrayList(
-                "Ăn uống", "Mua sắm", "Giải trí", "Học tập", "Đi lại", "Điện nước", "Khác"
+                "Food", "Shopping", "Entertainment", "Education", "Transportation", "Utilities", "Others"
         ));
 
-        incomeSourceComboBox.setItems(FXCollections.observableArrayList("Lương", "Kinh doanh", "Khác"));
+        incomeSourceComboBox.setItems(FXCollections.observableArrayList("Salary", "Business", "Other"));
 
         monthColumn.setCellValueFactory(cellData -> cellData.getValue().monthProperty());
         categoryColumn.setCellValueFactory(cellData -> cellData.getValue().categoryProperty());
@@ -154,11 +154,11 @@ public class HelloController {
             String analysis;
 
             if (amount > 10000000) {
-                analysis = "Cần phải tiết kiệm hơn";
+                analysis = "Needs to save more";
             } else if (amount >= 5000000) {
-                analysis = "Quản lí chi tiêu ổn";
+                analysis = "Managing expenses well";
             } else {
-                analysis = "Chi tiêu rất tốt";
+                analysis = "Very good spending";
             }
             return new javafx.beans.property.SimpleStringProperty(analysis);
         });
@@ -181,11 +181,11 @@ public class HelloController {
     }
 
     private void setupCharts() {
-        monthAxis.setLabel("Tháng");
-        expenseYAxis.setLabel("Tổng Chi Tiêu (VND)");
+        monthAxis.setLabel("Month");
+        expenseYAxis.setLabel("Total Expense (VND)");
 
-        expensePieChart.setTitle("Chi Tiêu Theo Danh Mục");
-        expenseBarChart.setTitle("Chi Tiêu Tháng");
+        expensePieChart.setTitle("Expenses by Category");
+        expenseBarChart.setTitle("Monthly Expenses");
     }
 
     @FXML
@@ -195,18 +195,18 @@ public class HelloController {
         double amount;
 
         if (month == null || category == null) {
-            showAlert("Lỗi", "Vui lòng chọn tháng và danh mục!", Alert.AlertType.ERROR);
+            showAlert("Error", "Please select a month and category!", Alert.AlertType.ERROR);
             return;
         }
 
         try {
             amount = Double.parseDouble(amountTextField.getText());
         } catch (NumberFormatException e) {
-            showAlert("Lỗi", "Số tiền không hợp lệ!", Alert.AlertType.ERROR);
+            showAlert("Error", "Invalid amount!", Alert.AlertType.ERROR);
             return;
         }
 
-        Expense expense = new Expense(month, category, amount, "Không có ghi chú");
+        Expense expense = new Expense(month, category, amount, "No note");
 
         expenseService.addExpense(expense);
         expenseList.add(expense);
@@ -228,7 +228,7 @@ public class HelloController {
         monthlyExpenseAnalysis.put(month, monthlyExpenseAnalysis.getOrDefault(month, 0.0) + amount);
 
         double totalExpense = expenseService.getExpenses().stream().mapToDouble(Expense::getAmount).sum();
-        totalExpenseText.setText("Tổng chi tiêu hiện tại: " + totalExpense + " VND");
+        totalExpenseText.setText("Current total expense: " + totalExpense + " VND");
 
         updateCharts();
         updateExpenseTables();
@@ -245,18 +245,18 @@ public class HelloController {
         double amount;
 
         if (source == null) {
-            showAlert("Lỗi", "Vui lòng chọn nguồn thu nhập!", Alert.AlertType.ERROR);
+            showAlert("Error", "Please select an income source!", Alert.AlertType.ERROR);
             return;
         }
 
         try {
             amount = Double.parseDouble(incomeAmountTextField.getText());
         } catch (NumberFormatException e) {
-            showAlert("Lỗi", "Số tiền không hợp lệ!", Alert.AlertType.ERROR);
+            showAlert("Error", "Invalid amount!", Alert.AlertType.ERROR);
             return;
         }
 
-        Income income = new Income(source, amount, "Không có ghi chú");
+        Income income = new Income(source, amount, "No note");
         incomeService.addIncome(income);
         incomeList.add(income);
 
@@ -268,7 +268,7 @@ public class HelloController {
 
     private void updateTotalIncome() {
         double totalIncome = incomeService.getIncomes().stream().mapToDouble(Income::getAmount).sum();
-        totalIncomeText.setText("Tổng thu nhập hiện tại: " + totalIncome + " VND");
+        totalIncomeText.setText("Current total income: " + totalIncome + " VND");
     }
 
     private void updateMonthlyExpenseTable() {
@@ -302,13 +302,36 @@ public class HelloController {
         expenseBarChart.getData().clear();
         expensePieChart.getData().clear();
 
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Chi tiêu theo tháng");
+        if (expenseData.isEmpty()) {
+            return;
+        }
 
+        List<Map.Entry<String, Double>> sortedData = new ArrayList<>();
         expenseData.forEach((month, categories) -> {
             double totalExpenseForMonth = categories.values().stream().mapToDouble(Double::doubleValue).sum();
-            series.getData().add(new XYChart.Data<>(month, totalExpenseForMonth));
+            sortedData.add(new AbstractMap.SimpleEntry<>(month, totalExpenseForMonth));
         });
+
+        for (int i = 0; i < sortedData.size(); i++) {
+            for (int j = 0; j < sortedData.size() - 1 - i; j++) {
+                if (sortedData.get(j).getValue() < sortedData.get(j + 1).getValue()) {
+                    Collections.swap(sortedData, j, j + 1);
+                }
+            }
+        }
+
+        sortedData.sort((entry1, entry2) -> {
+            List<String> months = Arrays.asList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+            return Integer.compare(months.indexOf(entry1.getKey()), months.indexOf(entry2.getKey()));
+        });
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Expenses by Month");
+
+        for (Map.Entry<String, Double> entry : sortedData) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
         expenseBarChart.getData().add(series);
 
         Map<String, Double> cumulativeCategoryData = new HashMap<>();
@@ -324,17 +347,28 @@ public class HelloController {
         });
     }
 
+
+
     private void showAlert(String title, String content, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
     }
+
     @FXML
     public void clearHistory(ActionEvent event) {
         expenseService.clearHistory();
+
         expenseList.clear();
-        expenseHistoryTable.setItems(expenseList);
-        totalExpenseText.setText("Tổng chi tiêu hiện tại: 0 VND");
+        expenseData.clear();
+        highestExpenseByMonth.clear();
+        lowestExpenseByMonth.clear();
+        monthlyExpenseAnalysis.clear();
+
+        totalExpenseText.setText("Current total expense: 0 VND");
+        updateCharts();
+        updateExpenseTables();
+        expenseHistoryTable.refresh();
     }
 }
